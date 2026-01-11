@@ -79,25 +79,27 @@ def predict():
 
     history = load_history()
     BASE_URL = request.host_url.rstrip("/")
-
+     
     history.append({
-        "username": username,
-        "image": f"{BASE_URL}/uploads/{filename}",
-        "result": result["label"],
-        "score": result["score"],
-        "time": timestamp,
-        "outline_image": f"{BASE_URL}/{result['outline_image'].lstrip('/')}",
-        "filled_image": f"{BASE_URL}/{result['filled_image'].lstrip('/')}"
-    })
+    "username": username,
+    "image": f"{BASE_URL}/uploads/{filename}",
+    "result": result["label"],
+    "score": result["score"],
+    "time": timestamp,
+    "outline_image": f"{BASE_URL}/results/{os.path.basename(result['outline_image'])}",
+    "filled_image": f"{BASE_URL}/results/{os.path.basename(result['filled_image'])}"
+})
+ 
 
     save_history(history)
 
     return jsonify({
-        "result": result["label"],
-        "anomaly_score": result["score"],
-        "outline_image": f"{BASE_URL}/{result['outline_image'].lstrip('/')}",
-        "filled_image": f"{BASE_URL}/{result['filled_image'].lstrip('/')}"
-    })
+    "result": result["label"],
+    "anomaly_score": result["score"],
+    "outline_image": f"{BASE_URL}/results/{os.path.basename(result['outline_image'])}",
+    "filled_image": f"{BASE_URL}/results/{os.path.basename(result['filled_image'])}"
+})
+
 
 # ---------- FILE SERVING ----------
 @app.route("/uploads/<path:filename>")
