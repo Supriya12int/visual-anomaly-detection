@@ -11,15 +11,7 @@ from detector import detect_anomaly
 # -------------------- APP --------------------
 app = Flask(__name__)
 
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "https://funny-genie-c4a8c1.netlify.app",
-            "https://*.netlify.app"
-        ]
-    }
-})
-app.config["CORS_HEADERS"] = "Content-Type"
+CORS(app)
 
 UPLOAD_FOLDER = "uploads"
 RESULT_FOLDER = "results"
@@ -59,8 +51,10 @@ def login():
     return jsonify({"success": success, "role": role})
 
 # ---------- PREDICT ----------
-@app.route("/predict", methods=["POST"])
+@app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
+    if request.method == "OPTIONS":
+        return jsonify({"ok": True}), 200
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
